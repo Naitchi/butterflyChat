@@ -6,14 +6,7 @@
   "author": "Naitchi",
   "license": "MIT",
   "dependencies": {
-    "dotenv": "^16.4.4",
     "express": "^4.18.2",
-    "express-rate-limit": "^7.1.5",
-    "helmet": "^7.1.0",
     "socket.io": "^4.7.4"
-  },
-  "scripts": {
-    "test": "test",
-    "start": "node app.js"
   }
 }
