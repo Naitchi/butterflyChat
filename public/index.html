@@ -1,45 +1,50 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat</title>
+    <title>test</title>
 </head>
 
 <body>
-    <h1>Chat</h1>
-    <ul id="messages"></ul>
-    <form id="form" action="">
-        <input id="input" autocomplete="off" /><button>Envoyer</button>
-    </form>
-
-    <!-- Référence à la bibliothèque client Socket.IO -->
-    <script src="./socket.io/socket.io.js" crossorigin="anonymous" type="text/javascript"></script>
-
+    <div id="chart_div" style="width: 100%; height: 500px;"></div>
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="https://js.pusher.com/8.0.1/pusher.min.js"></script>
     <script>
-        let socket = io();
+        google.charts.load("current", { packages: ["corechart"] });
+        google.charts.setOnLoadCallback(() => {
 
-        // Récupérer les éléments du DOM
-        const form = document.getElementById('form');
-        const input = document.getElementById('input');
-        const messages = document.getElementById('messages');
-
-        // Gérer l'envoi du formulaire
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            if (input.value) {
-                socket.emit('message', input.value);
-                input.value = '';
-            }
-        });
-
-        // Gérer la réception des messages
-        socket.on('message', (msg) => {
-            const item = document.createElement('li');
-            item.textContent = msg;
-            messages.appendChild(item);
-            window.scrollTo(0, document.body.scrollHeight);
+            // Instead of hard-coding the initial table data,
+            // you could fetch it from your server.
+            const dataTable = google.visualization.arrayToDataTable([
+                ["Year", "Price"],
+                [2013, 400],
+                [2014, 460],
+            ]);
+            const chart = new google.visualization.AreaChart(
+                document.getElementById("chart_div")
+            );
+            const options = {
+                title: "1 BTC in USD",
+                hAxis: { title: "Year", titleTextStyle: { color: "#333" } },
+                vAxis: { minValue: 0 },
+                animation: { duration: 100, easing: "out" },
+            };
+            chart.draw(dataTable, options);
+            let year = 2015;
+            Pusher.logToConsole = true;
+            const pusher = new Pusher(
+                "46c45f5e0f237306de38",
+                {
+                    cluster: "eu",
+                    forceTLS: true,
+                }
+            );
+            const channel = pusher.subscribe("butterflychat");
+            channel.bind("testrandomnumber", (data) => {
+                const row = [year++, data.value];
+                dataTable.addRow(row);
+                chart.draw(dataTable, options);
+            });
         });
     </script>
 </body>

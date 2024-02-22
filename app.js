@@ -1,27 +1,29 @@
 const express = require('express');
 const http = require('http');
-const socketIo = require('socket.io');
 const app = express();
 const server = http.createServer(app);
-const io = socketIo(server);
+const Pusher = require('pusher');
+
+require('dotenv').config();
+const pusher = new Pusher({
+  appId: process.env.APP_ID,
+  key: process.env.APP_KEY,
+  secret: process.env.APP_SECRET,
+  cluster: process.env.APP_CLUSTER,
+  useTLS: true,
+});
 
 app.use(express.static('public'));
 app.get('/', (req, res) => {
   res.sendFile(`${__dirname}/public/index.html`);
 });
 
-io.on('connection', (socket) => {
-  console.log('Un client est connecté');
-
-  socket.on('message', (data) => {
-    console.log('Message reçu : ', data);
-    io.emit('message', data);
+// Trigger a new random event every second for test.
+setInterval(() => {
+  pusher.trigger('butterflychat', 'testrandomnumber', {
+    value: Math.random() * 5000,
   });
-
-  socket.on('disconnect', () => {
-    console.log('Un client est déconnecté');
-  });
-});
+}, 1000);
 
 const PORT = process.env.PORT || 3000;
 
