@@ -29,20 +29,22 @@
       // Handle form submission
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
+        console.log('in submit');
+        console.log(input.value);
         if (!input.value.trim()) {
-          return; // Prevent sending empty messages
+          return;
         }
         try {
           const payload = {
-            // TODO: Include username field if applicable
-            // username: "", // Remove placeholder if implemented
+            // TODO: Include username field
+            // username: "",
             message: input.value,
           };
-          await axios.post('https://butterfly-chat.vercel.app/api/', payload); // Use async/await for clarity
+          await axios.post('https://butterfly-chat.vercel.app/api/', payload);
           input.value = '';
+          console.log('submit done');
         } catch (error) {
           console.error('Error sending message:', error);
-          // Handle error gracefully, e.g., display an error message
         }
       });
 
