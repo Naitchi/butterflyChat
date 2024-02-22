@@ -38,7 +38,7 @@
             // username: "", // Remove placeholder if implemented
             message: input.value,
           };
-          await axios.post('http://localhost:3000/', payload); // Use async/await for clarity
+          await axios.post('https://butterfly-chat.vercel.app/api/', payload); // Use async/await for clarity
           input.value = '';
         } catch (error) {
           console.error('Error sending message:', error);
