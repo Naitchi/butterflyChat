@@ -1,29 +1,21 @@
 const express = require('express');
-const http = require('http');
 const app = express();
-const server = http.createServer(app);
-const Pusher = require('pusher');
+const server = require('http').createServer(app);
 
+const index = require('./routes/index');
+
+// Nécessaire pour les .env
 require('dotenv').config();
-const pusher = new Pusher({
-  appId: process.env.APP_ID,
-  key: process.env.APP_KEY,
-  secret: process.env.APP_SECRET,
-  cluster: process.env.APP_CLUSTER,
-  useTLS: true,
-});
+
+// Nécessaire pour le router
+app.use(express.json());
 
 app.use(express.static('public'));
 app.get('/', (req, res) => {
   res.sendFile(`${__dirname}/public/index.html`);
 });
 
-// Trigger a new random event every second for test.
-setInterval(() => {
-  pusher.trigger('butterflychat', 'testrandomnumber', {
-    value: Math.random() * 5000,
-  });
-}, 1000);
+app.use('/api/', index);
 
 const PORT = process.env.PORT || 3000;
 
