@@ -26,20 +26,27 @@
       const input = document.getElementById('input');
       const messages = document.getElementById('messages');
 
-      // Gérer l'envoi du formulaire
-      form.addEventListener('submit', (e) => {
+      // Handle form submission
+      form.addEventListener('submit', async (e) => {
         e.preventDefault();
-        if (input.value) {
+        if (!input.value.trim()) {
+          return; // Prevent sending empty messages
+        }
+        try {
           const payload = {
-            // username: this.state.username,
+            // TODO: Include username field if applicable
+            // username: "", // Remove placeholder if implemented
             message: input.value,
           };
-          axios.post('https://butterfly-chat.vercel.app//api/', payload);
+          await axios.post('http://localhost:3000/', payload); // Use async/await for clarity
           input.value = '';
+        } catch (error) {
+          console.error('Error sending message:', error);
+          // Handle error gracefully, e.g., display an error message
         }
       });
 
-      // Gérer la réception des messages
+      // Handle received messages
       channel.bind('message', (msg) => {
         const item = document.createElement('li');
         item.textContent = msg;
