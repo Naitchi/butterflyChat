@@ -6,6 +6,7 @@ const index = require('./routes/index');
 
 // Nécessaire pour les .env
 require('dotenv').config();
+console.log(process.env);
 
 // Nécessaire pour le router
 app.use(express.json());
