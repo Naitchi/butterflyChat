@@ -4,12 +4,24 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Chat</title>
+    <link rel="stylesheet" href="./styles/chatRoom.css" />
   </head>
 
   <body>
     <h1>Chat</h1>
-    <ul id="messages"></ul>
-    <form id="form" action=""><input id="input" autocomplete="off" /><button>Envoyer</button></form>
+    <div id="box_username">
+      <label for="username">
+        Pour rentrer dans la discussion il vous faut un nom d'utilisateur:
+      </label>
+      <input placeholder="Votre pseudo" type="text" name="unsername" id="username" />
+      <button id="validation">Validé</button>
+    </div>
+    <div id="box_chat" class="hide">
+      <ul id="messages"></ul>
+      <form id="form" action="">
+        <input id="input" autocomplete="off" /><button>Envoyer</button>
+      </form>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://js.pusher.com/8.0.1/pusher.min.js"></script>
@@ -25,6 +37,10 @@
       const form = document.getElementById('form');
       const input = document.getElementById('input');
       const messages = document.getElementById('messages');
+      const usernameInput = document.getElementById('username');
+      const validation = document.getElementById('validation');
+      const usernameBox = document.getElementById('box_username');
+      const chatBox = document.getElementById('box_chat');
 
       // Fonction pour extraire l'ID de l'URL
       const urlParams = new URLSearchParams(window.location.search);
@@ -34,6 +50,24 @@
         channel = pusher.subscribe(`butterflychat-${idRoom}`);
         console.log('Salon trouvé');
       } else alert('Aucun id trouvé dans l"url');
+
+      let username = localStorage.getItem('username');
+      validation.addEventListener('click', () => {
+        console.log(usernameInput.value);
+        if (usernameInput.value.length > 0) {
+          localStorage.setItem('username', usernameInput.value);
+          username = usernameInput.value;
+          console.log(username);
+          usernameBox.classList.add('hide');
+          chatBox.classList.remove('hide');
+        }
+      });
+      // TODO Check si ça ce met bien à jour
+      if (username.length !== 0) {
+        console.log('dans le truc du username');
+        usernameBox.classList.add('hide');
+        chatBox.classList.remove('hide');
+      }
 
       // Handle form submission
       form.addEventListener('submit', async (e) => {
@@ -45,12 +79,14 @@
         }
         try {
           const payload = {
-            // TODO: Include username field
-            // username: "",
-            message: input.value,
+            username: username,
+            msg: input.value,
             idRoom: idRoom,
           };
-          await axios.post('https://butterfly-chat.vercel.app/api/', payload);
+          console.log(payload);
+          // https://butterfly-chat.vercel.app
+          // http://localhost:3000
+          await axios.post('http://localhost:3000/api/', payload);
           input.value = '';
           console.log('submit done');
         } catch (error) {
@@ -59,10 +95,20 @@
       });
 
       // Handle received messages
-      channel.bind('message', (msg) => {
-        const item = document.createElement('li');
-        item.textContent = msg;
-        messages.appendChild(item);
+      channel.bind('message', (data) => {
+        const box = document.createElement('div');
+        if (data.username === username) box.classList.add('our_message');
+        box.classList.add('box_message');
+        const user = document.createElement('p');
+        user.classList.add('username');
+        user.textContent = data.username;
+        const item = document.createElement('p');
+        item.classList.add('text');
+        item.textContent = data.msg;
+        box.appendChild(user);
+        box.appendChild(item);
+
+        messages.appendChild(box);
         window.scrollTo(0, document.body.scrollHeight);
       });
     </script>

@@ -1,0 +1,22 @@
+.hide {
+    display: none !important;
+}
+
+.our_message {
+    align-self: flex-end;
+    background-color: aqua;
+}
+
+#messages {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: flex-start;
+    padding: 5%;
+
+    width: 90%;
+    height: 60vh;
+    border-radius: 15px;
+    background-color: aquamarine;
+    overflow-y: scroll;
+}
