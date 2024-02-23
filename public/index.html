@@ -3,57 +3,25 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Chat</title>
+    <title>Butterfly Chat</title>
   </head>
 
   <body>
-    <h1>Chat</h1>
-    <ul id="messages"></ul>
-    <form id="form" action=""><input id="input" autocomplete="off" /><button>Envoyer</button></form>
+    <h1>Butterfly Chat</h1>
+    <p>
+      Butterfly Chat is an online multi-personnes real-time Chat where every message you send is
+      encrypted and never saved and deleted when you leave the room or just refresh your page,
+      short-lived just like a Butterfly 🦋.
+    </p>
+    <button id="newRoom">Create a room -></button>
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="https://js.pusher.com/8.0.1/pusher.min.js"></script>
     <script>
-      Pusher.logToConsole = true;
-      const pusher = new Pusher('46c45f5e0f237306de38', {
-        cluster: 'eu',
-        forceTLS: true,
-      });
-      const channel = pusher.subscribe('butterflychat');
+      const monBouton = document.getElementById('newRoom');
+      const randomId = 'id' + Math.random().toString(16).slice(2);
 
-      // Récupérer les éléments du DOM
-      const form = document.getElementById('form');
-      const input = document.getElementById('input');
-      const messages = document.getElementById('messages');
-
-      // Handle form submission
-      form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        console.log('in submit');
-        console.log(input.value);
-        if (!input.value.trim()) {
-          return;
-        }
-        try {
-          const payload = {
-            // TODO: Include username field
-            // username: "",
-            message: input.value,
-          };
-          await axios.post('https://butterfly-chat.vercel.app/api/', payload);
-          input.value = '';
-          console.log('submit done');
-        } catch (error) {
-          console.error('Error sending message:', error);
-        }
-      });
-
-      // Handle received messages
-      channel.bind('message', (msg) => {
-        const item = document.createElement('li');
-        item.textContent = msg;
-        messages.appendChild(item);
-        window.scrollTo(0, document.body.scrollHeight);
+      monBouton.addEventListener('click', function () {
+        window.location.href = `chatRoom.html?room=${randomId}`;
       });
     </script>
   </body>
