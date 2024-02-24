@@ -42,6 +42,14 @@
       const usernameBox = document.getElementById('box_username');
       const chatBox = document.getElementById('box_chat');
 
+      const checkUsername = (username, divUser, divChat) => {
+        console.log('checkUsername');
+        if (username !== null) {
+          usernameBox.classList.add('hide');
+          chatBox.classList.remove('hide');
+        }
+      };
+
       // Fonction pour extraire l'ID de l'URL
       const urlParams = new URLSearchParams(window.location.search);
       const idRoom = urlParams.get('room');
@@ -52,28 +60,20 @@
       } else alert('Aucun id trouvé dans l"url');
 
       let username = localStorage.getItem('username');
+      checkUsername(username, usernameBox, chatBox);
+
       validation.addEventListener('click', () => {
-        console.log(usernameInput.value);
         if (usernameInput.value.length > 0) {
           localStorage.setItem('username', usernameInput.value);
           username = usernameInput.value;
-          console.log(username);
-          usernameBox.classList.add('hide');
-          chatBox.classList.remove('hide');
+          checkUsername(username, usernameBox, chatBox);
         }
       });
-      // TODO Check si ça ce met bien à jour
-      if (username.length !== 0) {
-        console.log('dans le truc du username');
-        usernameBox.classList.add('hide');
-        chatBox.classList.remove('hide');
-      }
 
       // Handle form submission
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
         console.log('in submit');
-        console.log(input.value);
         if (!input.value.trim()) {
           return;
         }
@@ -97,17 +97,19 @@
       // Handle received messages
       channel.bind('message', (data) => {
         const box = document.createElement('div');
-        if (data.username === username) box.classList.add('our_message');
         box.classList.add('box_message');
         const user = document.createElement('p');
         user.classList.add('username');
-        user.textContent = data.username;
+        user.textContent = `${data.username} : `;
         const item = document.createElement('p');
         item.classList.add('text');
         item.textContent = data.msg;
-        box.appendChild(user);
+        if (data.username === username) {
+          box.classList.add('our_message');
+        } else {
+          box.appendChild(user);
+        }
         box.appendChild(item);
-
         messages.appendChild(box);
         window.scrollTo(0, document.body.scrollHeight);
       });
