@@ -5,19 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Chat</title>
     <link rel="stylesheet" href="./styles/chatRoom.css" />
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400&display=swap');
+    </style>
   </head>
 
   <body>
     <h1 class="title">Butterfly Chat</h1>
     <div id="box_username">
-      <label for="username">
+      <label for="username" class="label_username">
         Pour rentrer dans la discussion il vous faut un nom d'utilisateur:
       </label>
       <input placeholder="Votre pseudo" type="text" name="unsername" id="username" />
       <button id="validation">Validé</button>
     </div>
     <div id="box_chat" class="hide">
-      <ul id="messages"></ul>
+      <ul id="messages">
+        <!-- TODO faire un message de connexion <p>Vous êtes connecté</p> -->
+      </ul>
       <form id="form" action="">
         <input id="input" autocomplete="off" />
         <button id="send">Envoyer</button>
@@ -101,7 +106,7 @@
         box.classList.add('box_message');
         const user = document.createElement('p');
         user.classList.add('username');
-        user.textContent = `${data.username} : `;
+        user.textContent = `${data.username}:`;
         const item = document.createElement('p');
         item.classList.add('text');
         item.textContent = data.msg;
