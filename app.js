@@ -10,7 +10,7 @@ require('dotenv').config();
 // Nécessaire pour le router
 app.use(express.json());
 
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 app.get('/', (req, res) => {
   res.sendFile(`${__dirname}/public/index.html`);
 });
