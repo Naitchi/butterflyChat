@@ -80,22 +80,22 @@
 
       // Handle form submission
       form.addEventListener('submit', async (e) => {
+        const payload = {
+          username: username,
+          msg: input.value,
+          idRoom: idRoom,
+        };
+        input.value = '';
         e.preventDefault();
         console.log('in submit');
         if (!input.value.trim()) {
           return;
         }
         try {
-          const payload = {
-            username: username,
-            msg: input.value,
-            idRoom: idRoom,
-          };
           console.log(payload);
           // https://butterfly-chat.vercel.app
           // http://localhost:3000
           await axios.post('https://butterfly-chat.vercel.app/api/', payload);
-          input.value = '';
           console.log('submit done');
         } catch (error) {
           console.error('Error sending message:', error);
@@ -119,7 +119,7 @@
         }
         box.appendChild(item);
         messages.appendChild(box);
-        window.scrollTo(0, document.body.scrollHeight);
+        messages.scrollTop = 9999999;
       });
     </script>
   </body>
