@@ -19,6 +19,12 @@ html {
     background: linear-gradient(90deg, rgba(255, 188, 0, 1) 0%, rgba(106, 0, 255, 1) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+
+    transition: all ease-in-out 1s;
+}
+
+.title:hover {
+    transform: translate(-5px, -5px);
 }
 
 .hide {
@@ -78,6 +84,7 @@ body {
     font-size: 1.2rem;
     padding: 15px;
     color-scheme: dark;
+    cursor: pointer;
 }
 
 #messages {
@@ -121,4 +128,12 @@ body {
 #validation {
     padding: 5px 7px;
     font-size: 1.5rem;
+}
+
+#copy {
+    cursor: pointer;
+    padding: 7px;
+    margin: 10px;
+    font-size: 1rem;
+    border-radius: 12px;
 }
