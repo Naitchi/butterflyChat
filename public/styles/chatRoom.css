@@ -137,3 +137,8 @@ body {
     font-size: 1rem;
     border-radius: 12px;
 }
+
+.connexion {
+    color: white;
+    font-style: italic;
+}

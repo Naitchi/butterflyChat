@@ -7,6 +7,14 @@ async function message(req, res) {
   res.status(200).send(payload);
 }
 
+async function newChatter(req, res) {
+  console.log('newChatter');
+  const payload = req.body;
+  await pusher.trigger(`butterflychat-${payload.idRoom}`, 'newChatter', payload);
+  res.status(200).send(payload);
+}
+
 module.exports = {
   message,
+  newChatter,
 };

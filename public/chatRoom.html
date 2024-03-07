@@ -13,7 +13,6 @@
   <body>
     <h1 class="title"><a href="/">Butterfly Chat</a></h1>
     <button id="copy">→ Copier le lien d'invitation ←</button>
-    <!-- TODO faire un bouton pour copier le lien en un clique -->
     <div id="box_username">
       <label for="username" class="label_username">
         Pour rentrer dans la discussion il vous faut un nom d'utilisateur:
@@ -23,9 +22,7 @@
     </div>
     <!-- TODO ajouté une listes des users si c'est possible -->
     <div id="box_chat" class="hide">
-      <ul id="messages">
-        <!-- TODO faire un message de connexion <p>Vous êtes connecté</p> -->
-      </ul>
+      <ul id="messages"></ul>
       <form id="form" action="">
         <input id="input" autocomplete="off" />
         <button id="send">Envoyer</button>
@@ -42,6 +39,10 @@
         forceTLS: true,
       });
 
+      // https://butterfly-chat.vercel.app
+      // http://localhost:3000
+      const link = 'http://localhost:3000';
+
       // Récupérer les éléments du DOM
       const form = document.getElementById('form');
       const input = document.getElementById('input');
@@ -52,14 +53,6 @@
       const chatBox = document.getElementById('box_chat');
       const copy = document.getElementById('copy');
 
-      const checkUsername = (username, divUser, divChat) => {
-        console.log('checkUsername');
-        if (username !== null) {
-          usernameBox.classList.add('hide');
-          chatBox.classList.remove('hide');
-        }
-      };
-
       // Fonction pour extraire l'ID de l'URL
       const urlParams = new URLSearchParams(window.location.search);
       const idRoom = urlParams.get('room');
@@ -69,13 +62,63 @@
         console.log('Salon trouvé');
       } else alert('Aucun id trouvé dans l"url');
 
+      // Handle received messages
+      channel.bind('message', (data) => {
+        const box = document.createElement('div');
+        box.classList.add('box_message');
+        const user = document.createElement('p');
+        user.classList.add('username');
+        user.textContent = `${data.username}:`;
+        const item = document.createElement('p');
+        item.classList.add('text');
+        item.textContent = data.msg;
+        if (data.username === username) {
+          box.classList.add('our_message');
+        } else {
+          box.appendChild(user);
+        }
+        box.appendChild(item);
+        messages.appendChild(box);
+        messages.scrollTop = 9999999;
+      });
+
+      // Handle new chatters
+      channel.bind('newChatter', (data) => {
+        const item = document.createElement('p');
+        item.classList.add('connexion');
+        item.textContent = `L'utilisateur ${data.username} vient de se connecter au salon.`;
+        messages.appendChild(item);
+        messages.scrollTop = 9999999;
+      });
+
+      const checkUsername = async (username, divUser, divChat) => {
+        console.log('checkUsername');
+
+        if (!username.trim()) return;
+        usernameBox.classList.add('hide');
+        chatBox.classList.remove('hide');
+
+        console.log('in newChatter');
+        try {
+          const payload = {
+            username: username,
+            idRoom: idRoom,
+          };
+          console.log(payload);
+          await axios.post(`${link}/api/newChatter`, payload);
+          console.log('newChatter connected');
+        } catch (error) {
+          console.error('Error sending message:', error);
+        }
+      };
+
       let username = localStorage.getItem('username');
       checkUsername(username, usernameBox, chatBox);
 
       validation.addEventListener('click', () => {
-        if (usernameInput.value.length > 0) {
-          localStorage.setItem('username', usernameInput.value);
-          username = usernameInput.value;
+        if (usernameInput.value.trim().length > 0) {
+          localStorage.setItem('username', usernameInput.value.trim());
+          username = usernameInput.value.trim();
           checkUsername(username, usernameBox, chatBox);
         }
       });
@@ -103,33 +146,11 @@
           };
           input.value = '';
           console.log(payload);
-          // https://butterfly-chat.vercel.app
-          // http://localhost:3000
-          await axios.post('https://butterfly-chat.vercel.app/api/', payload);
+          await axios.post(`${link}/api/`, payload);
           console.log('submit done');
         } catch (error) {
           console.error('Error sending message:', error);
         }
-      });
-
-      // Handle received messages
-      channel.bind('message', (data) => {
-        const box = document.createElement('div');
-        box.classList.add('box_message');
-        const user = document.createElement('p');
-        user.classList.add('username');
-        user.textContent = `${data.username}:`;
-        const item = document.createElement('p');
-        item.classList.add('text');
-        item.textContent = data.msg;
-        if (data.username === username) {
-          box.classList.add('our_message');
-        } else {
-          box.appendChild(user);
-        }
-        box.appendChild(item);
-        messages.appendChild(box);
-        messages.scrollTop = 9999999;
       });
     </script>
   </body>
