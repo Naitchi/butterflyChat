@@ -2,23 +2,38 @@ const pusher = require('../pusher');
 
 async function message(req, res) {
   console.log('message');
-  const payload = req.body;
-  await pusher.trigger(`butterflychat-${payload.idRoom}`, 'message', payload);
-  res.status(200).send(payload);
+  try {
+    const payload = req.body;
+    await pusher.trigger(`butterflychat-${payload.idRoom}`, 'message', payload);
+    res.status(201).send(payload);
+  } catch (error) {
+    console.error('Erreur dans le contrôleur message:', error);
+    res.status(500).send("Une erreur s'est produite");
+  }
 }
 
 async function newChatter(req, res) {
   console.log('newChatter');
-  const payload = req.body;
-  await pusher.trigger(`butterflychat-${payload.idRoom}`, 'newChatter', payload);
-  res.status(200).send(payload);
+  try {
+    const payload = req.body;
+    await pusher.trigger(`butterflychat-${payload.idRoom}`, 'newChatter', payload);
+    res.status(200).send(payload);
+  } catch (error) {
+    console.error('Erreur dans le contrôleur message:', error);
+    res.status(500).send("Une erreur s'est produite");
+  }
 }
 
 async function chatterLeft(req, res) {
   console.log('chatterLeft');
-  const payload = req.body;
-  await pusher.trigger(`butterflychat-${payload.idRoom}`, 'chatterLeft', payload);
-  res.status(200).send(payload);
+  try {
+    const payload = req.body;
+    await pusher.trigger(`butterflychat-${payload.idRoom}`, 'chatterLeft', payload);
+    res.status(200).send(payload);
+  } catch (error) {
+    console.error('Erreur dans le contrôleur message:', error);
+    res.status(500).send("Une erreur s'est produite");
+  }
 }
 
 module.exports = {
