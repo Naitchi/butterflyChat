@@ -132,20 +132,20 @@
         }
       });
 
-      window.addEventListener('beforeunload', async () => {
-        console.log('in newChatter');
+      window.addEventListener('beforeunload', () => {
+        console.log('in beforeunload');
         if (!username.trim()) return;
-        try {
-          const payload = {
+        fetch(`${link}/api/chatterLeft`, {
+          method: 'post',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
             username: username,
             idRoom: idRoom,
-          };
-          console.log(payload);
-          await axios.post(`${link}/api/chatterLeft`, payload);
-          console.log('Chatter left successfully');
-        } catch (error) {
-          console.error('Error sending message:', error);
-        }
+          }),
+          keepalive: true, // important
+        });
       });
 
       channel.bind('chatterLeft', (data) => {
