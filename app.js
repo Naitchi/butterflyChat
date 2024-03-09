@@ -1,12 +1,19 @@
-const express = require('express');
-const app = express();
-const server = require('http').createServer(app);
-const path = require('path');
+import express from 'express';
+import http from 'http';
+import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url'; // Importer la fonction fileURLToPath depuis le module 'url'
 
-const index = require('./routes/index');
+const __filename = fileURLToPath(import.meta.url); // Obtenir le chemin du fichier en cours d'exécution
+const __dirname = path.dirname(__filename); // Obtenir le répertoire du fichier en cours d'exécution
+
+const app = express();
+const server = http.createServer(app);
+
+import index from './routes/index.js';
 
 // Nécessaire pour les .env
-require('dotenv').config();
+dotenv.config();
 
 // Nécessaire pour le router
 app.use(express.json());
