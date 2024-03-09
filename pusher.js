@@ -1,5 +1,7 @@
-const Pusher = require('pusher');
-require('dotenv').config();
+import Pusher from 'pusher';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const pusher = new Pusher({
   appId: process.env.APP_ID,
@@ -9,4 +11,4 @@ const pusher = new Pusher({
   useTLS: true,
 });
 
-module.exports = pusher;
+export default pusher;

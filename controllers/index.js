@@ -1,4 +1,4 @@
-import pusher from 'pusher';
+import pusher from '../pusher.js';
 
 export const message = async (req, res) => {
   console.log('message');
