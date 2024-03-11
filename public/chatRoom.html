@@ -11,8 +11,10 @@
   </head>
 
   <body>
-    <h1 class="title"><a href="/">Butterfly Chat</a></h1>
-    <button id="copy">→ Copier le lien d'invitation ←</button>
+    <header>
+      <h1 class="title"><a href="/">Butterfly Chat</a></h1>
+      <button id="copy">→ Copier le lien <span class="responsive"> d'invitation</span> ←</button>
+    </header>
     <!-- TODO faire une animation soit les trois petits points soit un cercle qui tourne -->
     <p id="box_loading">Chargement du salon de discussion...</p>
     <div id="box_username" class="hide">
@@ -43,8 +45,7 @@
         forceTLS: true,
       });
 
-      // https://butterfly-chat.vercel.app
-      // http://localhost:3000
+      //const link = 'http://localhost:3000';
       const link = 'https://butterfly-chat.vercel.app';
 
       // Récupérer les éléments du DOM
